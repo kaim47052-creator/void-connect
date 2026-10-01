@@ -1,0 +1,23 @@
+name: Предложение
+description: Предложить функцию или улучшение
+title: "[Feature] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Какую задачу пользователя нужно решить?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Предлагаемый сценарий
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Как проверить готовность?
+    validations:
+      required: true

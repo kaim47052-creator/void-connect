@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-label="Void Connect — Windows + Android, early development">
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0b0b14"/><stop offset="1" stop-color="#24183e"/></linearGradient>
+    <linearGradient id="accent"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+  </defs>
+  <rect width="1200" height="320" rx="24" fill="url(#bg)"/>
+  <circle cx="1020" cy="160" r="100" fill="none" stroke="#a78bfa" stroke-opacity=".2" stroke-width="2"/>
+  <circle cx="1020" cy="160" r="65" fill="none" stroke="#38bdf8" stroke-opacity=".3" stroke-width="2"/>
+  <path d="M965 125h45v70h-45zM1030 100h45v120h-45z" fill="none" stroke="url(#accent)" stroke-width="5"/>
+  <path d="M1010 160h20" stroke="#a78bfa" stroke-width="5"/>
+  <text x="64" y="80" fill="#a78bfa" font-family="Segoe UI, Arial, sans-serif" font-size="16" letter-spacing="5">VOID / CONNECT</text>
+  <text x="64" y="164" fill="#f5f3ff" font-family="Segoe UI, Arial, sans-serif" font-size="64" font-weight="700">Void Connect</text>
+  <text x="67" y="210" fill="#c4bdd7" font-family="Segoe UI, Arial, sans-serif" font-size="23">One interface. Connected devices.</text>
+  <text x="67" y="270" fill="#a78bfa" font-family="Segoe UI, Arial, sans-serif" font-size="16">WINDOWS + ANDROID   /   EARLY DEVELOPMENT</text>
+</svg>
