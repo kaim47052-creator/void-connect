@@ -9,7 +9,7 @@
 ![Languages](https://img.shields.io/badge/interface-RU_%2F_EN-A78BFA?style=flat-square)
 [![CI](https://github.com/kaim47052-creator/void-connect/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/kaim47052-creator/void-connect/actions/workflows/flutter-ci.yml)
 
-[План разработки](docs/ROADMAP.md) · [Архитектура](docs/ARCHITECTURE.md) · [Задачи](https://github.com/kaim47052-creator/void-connect/issues) · [Участие](CONTRIBUTING.md)
+[План разработки](docs/ROADMAP.md) · [Архитектура v0.1](docs/ARCHITECTURE.md) · [Задачи](https://github.com/kaim47052-creator/void-connect/issues) · [Участие](CONTRIBUTING.md)
 
 </div>
 
