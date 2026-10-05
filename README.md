@@ -1,6 +1,6 @@
 <div align="center">
 
-![Void Connect](docs/assets/banner.svg)
+![Void Connect](docs/assets/banner.png)
 
 **Единый интерфейс. Связанные устройства. Пространство для расширений.**
 
