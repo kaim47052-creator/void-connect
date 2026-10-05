@@ -34,6 +34,10 @@ class FlutterWindow : public Win32Window {
   // Native app discovery, library storage, and launch support.
   std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>>
       app_library_channel_;
+
+  // Persistent interface preferences.
+  std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>>
+      settings_channel_;
 };
 
 #endif  // RUNNER_FLUTTER_WINDOW_H_

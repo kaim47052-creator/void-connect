@@ -11,9 +11,30 @@ class MainActivity : FlutterActivity() {
     private val libraryPreferences by lazy {
         getSharedPreferences("void_connect_app_library", MODE_PRIVATE)
     }
+    private val settingsPreferences by lazy {
+        getSharedPreferences("void_connect_settings", MODE_PRIVATE)
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            "void_connect/settings",
+        ).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "getLanguage" -> result.success(settingsPreferences.getString(KEY_LANGUAGE, null))
+                "setLanguage" -> {
+                    val languageCode = call.argument<String>("languageCode")
+                    if (languageCode == null || languageCode !in SUPPORTED_LANGUAGES) {
+                        result.error("invalid_argument", "Unsupported language", null)
+                    } else {
+                        settingsPreferences.edit().putString(KEY_LANGUAGE, languageCode).apply()
+                        result.success(null)
+                    }
+                }
+                else -> result.notImplemented()
+            }
+        }
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             "void_connect/app_library",
@@ -90,5 +111,7 @@ class MainActivity : FlutterActivity() {
 
     companion object {
         private const val KEY_SAVED_APPS = "saved_app_ids"
+        private const val KEY_LANGUAGE = "language_code"
+        private val SUPPORTED_LANGUAGES = setOf("ru", "en")
     }
 }

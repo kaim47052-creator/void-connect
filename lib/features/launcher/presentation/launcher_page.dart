@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/l10n/app_strings.dart';
+import '../../../core/l10n/generated/app_localizations.dart';
 import '../../../core/modules/module_descriptor.dart';
 import '../../../core/theme/void_theme.dart';
 import '../data/app_library_platform.dart';
@@ -8,19 +8,18 @@ import 'app_library_section.dart';
 
 class LauncherPage extends StatelessWidget {
   const LauncherPage({
-    required this.locale,
     required this.onLocaleChanged,
     required this.appLibraryPlatform,
     super.key,
   });
 
-  final Locale locale;
-  final ValueChanged<Locale> onLocaleChanged;
+  final Future<bool> Function(Locale) onLocaleChanged;
   final AppLibraryPlatform appLibraryPlatform;
 
   @override
   Widget build(BuildContext context) {
-    final strings = AppStrings(locale);
+    final strings = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     final modules = [
       ModuleDescriptor(
         id: 'devices',
@@ -71,8 +70,20 @@ class LauncherPage extends StatelessWidget {
                           ButtonSegment(value: 'en', label: Text('EN')),
                         ],
                         selected: {locale.languageCode},
-                        onSelectionChanged: (selection) =>
-                            onLocaleChanged(Locale(selection.single)),
+                        onSelectionChanged: (selection) async {
+                          final saved = await onLocaleChanged(
+                            Locale(selection.single),
+                          );
+                          if (!saved && context.mounted) {
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text(strings.languageSaveFailed),
+                                ),
+                              );
+                          }
+                        },
                       ),
                     ],
                   ),
@@ -103,10 +114,7 @@ class LauncherPage extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16),
-                  AppLibrarySection(
-                    locale: locale,
-                    platform: appLibraryPlatform,
-                  ),
+                  AppLibrarySection(platform: appLibraryPlatform),
                   const SizedBox(height: 36),
                   Text(
                     strings.modules,

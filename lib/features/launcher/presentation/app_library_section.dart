@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../core/l10n/app_strings.dart';
+import '../../../core/l10n/generated/app_localizations.dart';
 import '../data/app_library_platform.dart';
 import '../domain/launchable_app.dart';
 
 class AppLibrarySection extends StatefulWidget {
-  const AppLibrarySection({
-    required this.locale,
-    required this.platform,
-    super.key,
-  });
+  const AppLibrarySection({required this.platform, super.key});
 
-  final Locale locale;
   final AppLibraryPlatform platform;
 
   @override
@@ -20,7 +15,7 @@ class AppLibrarySection extends StatefulWidget {
 }
 
 class _AppLibrarySectionState extends State<AppLibrarySection> {
-  late AppStrings _strings = AppStrings(widget.locale);
+  AppLocalizations get _strings => AppLocalizations.of(context)!;
   final _searchController = TextEditingController();
   List<LaunchableApp> _availableApps = const [];
   List<String> _savedIds = const [];
@@ -33,14 +28,6 @@ class _AppLibrarySectionState extends State<AppLibrarySection> {
     super.initState();
     _searchController.addListener(_onSearchChanged);
     _loadLibrary();
-  }
-
-  @override
-  void didUpdateWidget(covariant AppLibrarySection oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.locale != widget.locale) {
-      _strings = AppStrings(widget.locale);
-    }
   }
 
   @override

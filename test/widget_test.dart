@@ -6,10 +6,12 @@ import 'package:void_connect/app/void_connect_app.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const appLibraryChannel = MethodChannel('void_connect/app_library');
+  const settingsChannel = MethodChannel('void_connect/settings');
   var availableApps = <Map<String, String>>[];
   var savedAppIds = <String>[];
   var launchedAppIds = <String>[];
   var launchSucceeds = true;
+  String? savedLanguage;
 
   setUp(() {
     availableApps = [
@@ -19,6 +21,9 @@ void main() {
     savedAppIds = [];
     launchedAppIds = [];
     launchSucceeds = true;
+    savedLanguage = null;
+    TestWidgetsFlutterBinding.instance.platformDispatcher.localeTestValue =
+        const Locale('ru');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(appLibraryChannel, (call) async {
           switch (call.method) {
@@ -42,20 +47,53 @@ void main() {
               throw MissingPluginException();
           }
         });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(settingsChannel, (call) async {
+          switch (call.method) {
+            case 'getLanguage':
+              return savedLanguage;
+            case 'setLanguage':
+              savedLanguage = (call.arguments as Map)['languageCode'] as String;
+              return null;
+            default:
+              throw MissingPluginException();
+          }
+        });
   });
 
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(appLibraryChannel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(settingsChannel, null);
+    TestWidgetsFlutterBinding.instance.platformDispatcher
+        .clearLocaleTestValue();
   });
 
   testWidgets('switches from Russian to English', (tester) async {
     await tester.pumpWidget(const VoidConnectApp());
+    await tester.pumpAndSettle();
     expect(find.text('Ранняя разработка'), findsOneWidget);
     await tester.tap(find.text('EN'));
     await tester.pumpAndSettle();
+    expect(savedLanguage, 'en');
     expect(find.text('Early development'), findsOneWidget);
     expect(find.text('Ранняя разработка'), findsNothing);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpWidget(const VoidConnectApp());
+    await tester.pumpAndSettle();
+    expect(find.text('Early development'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('uses Russian when the device language is unsupported', (
+    tester,
+  ) async {
+    TestWidgetsFlutterBinding.instance.platformDispatcher.localeTestValue =
+        const Locale('fr');
+    await tester.pumpWidget(const VoidConnectApp());
+    await tester.pumpAndSettle();
+    expect(find.text('Ранняя разработка'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

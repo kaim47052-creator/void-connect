@@ -63,6 +63,70 @@ std::optional<std::filesystem::path> AppLibraryFile() {
   return *roaming / L"VoidConnect" / L"app-library.txt";
 }
 
+std::optional<std::filesystem::path> LanguageSettingsFile() {
+  const auto roaming = KnownFolderPath(FOLDERID_RoamingAppData);
+  if (!roaming) return std::nullopt;
+  return *roaming / L"VoidConnect" / L"language.txt";
+}
+
+std::optional<std::string> ReadLanguage() {
+  const auto path = LanguageSettingsFile();
+  if (!path) return std::nullopt;
+  std::ifstream input(*path, std::ios::binary);
+  std::string language;
+  if (!std::getline(input, language)) return std::nullopt;
+  if (language == "ru" || language == "en") return language;
+  return std::nullopt;
+}
+
+bool WriteLanguage(const std::string& language) {
+  if (language != "ru" && language != "en") return false;
+  const auto path = LanguageSettingsFile();
+  if (!path) return false;
+  std::error_code error;
+  std::filesystem::create_directories(path->parent_path(), error);
+  if (error) return false;
+  std::ofstream output(*path, std::ios::binary | std::ios::trunc);
+  if (!output) return false;
+  output << language << "\n";
+  return output.good();
+}
+
+void HandleSettingsCall(
+    const flutter::MethodCall<EncodableValue>& call,
+    std::unique_ptr<flutter::MethodResult<EncodableValue>> result) {
+  if (call.method_name() == "getLanguage") {
+    const auto language = ReadLanguage();
+    result->Success(language ? EncodableValue(*language) : EncodableValue());
+    return;
+  }
+  if (call.method_name() == "setLanguage") {
+    const auto* arguments = std::get_if<EncodableMap>(call.arguments());
+    if (!arguments) {
+      result->Error("invalid_argument", "Language code is required");
+      return;
+    }
+    const auto language_entry = arguments->find(EncodableValue("languageCode"));
+    if (language_entry == arguments->end() ||
+        !std::holds_alternative<std::string>(language_entry->second)) {
+      result->Error("invalid_argument", "Language code is required");
+      return;
+    }
+    const auto language = std::get<std::string>(language_entry->second);
+    if (language != "ru" && language != "en") {
+      result->Error("invalid_argument", "Unsupported language");
+      return;
+    }
+    if (!WriteLanguage(language)) {
+      result->Error("storage_failed", "The language preference could not be saved");
+      return;
+    }
+    result->Success();
+    return;
+  }
+  result->NotImplemented();
+}
+
 std::vector<std::string> ReadSavedApps() {
   std::vector<std::string> app_ids;
   const auto path = AppLibraryFile();
@@ -235,6 +299,10 @@ bool FlutterWindow::OnCreate() {
       flutter_controller_->engine()->messenger(), "void_connect/app_library",
       &flutter::StandardMethodCodec::GetInstance());
   app_library_channel_->SetMethodCallHandler(HandleAppLibraryCall);
+  settings_channel_ = std::make_unique<flutter::MethodChannel<EncodableValue>>(
+      flutter_controller_->engine()->messenger(), "void_connect/settings",
+      &flutter::StandardMethodCodec::GetInstance());
+  settings_channel_->SetMethodCallHandler(HandleSettingsCall);
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
   flutter_controller_->engine()->SetNextFrameCallback([&]() {
