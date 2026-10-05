@@ -3,27 +3,25 @@ import 'package:flutter/material.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/modules/module_descriptor.dart';
 import '../../../core/theme/void_theme.dart';
+import '../data/app_library_platform.dart';
+import 'app_library_section.dart';
 
 class LauncherPage extends StatelessWidget {
   const LauncherPage({
     required this.locale,
     required this.onLocaleChanged,
+    required this.appLibraryPlatform,
     super.key,
   });
 
   final Locale locale;
   final ValueChanged<Locale> onLocaleChanged;
+  final AppLibraryPlatform appLibraryPlatform;
 
   @override
   Widget build(BuildContext context) {
     final strings = AppStrings(locale);
     final modules = [
-      ModuleDescriptor(
-        id: 'launcher',
-        title: strings.launcher,
-        description: strings.launcherDetail,
-        icon: Icons.apps_rounded,
-      ),
       ModuleDescriptor(
         id: 'devices',
         title: strings.sync,
@@ -98,6 +96,16 @@ class LauncherPage extends StatelessWidget {
                   Text(
                     strings.intro,
                     style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 36),
+                  Text(
+                    strings.libraryTitle,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 16),
+                  AppLibrarySection(
+                    locale: locale,
+                    platform: appLibraryPlatform,
                   ),
                   const SizedBox(height: 36),
                   Text(

@@ -3,10 +3,16 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../core/l10n/app_strings.dart';
 import '../core/theme/void_theme.dart';
+import '../features/launcher/data/app_library_platform.dart';
 import '../features/launcher/presentation/launcher_page.dart';
 
 class VoidConnectApp extends StatefulWidget {
-  const VoidConnectApp({super.key});
+  const VoidConnectApp({
+    super.key,
+    this.appLibraryPlatform = const AppLibraryPlatform(),
+  });
+
+  final AppLibraryPlatform appLibraryPlatform;
 
   @override
   State<VoidConnectApp> createState() => _VoidConnectAppState();
@@ -29,6 +35,7 @@ class _VoidConnectAppState extends State<VoidConnectApp> {
     ],
     home: LauncherPage(
       locale: _locale,
+      appLibraryPlatform: widget.appLibraryPlatform,
       onLocaleChanged: (locale) => setState(() => _locale = locale),
     ),
   );
