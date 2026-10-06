@@ -10,6 +10,35 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get loading => 'Загрузка…';
+
+  @override
+  String get russianLanguage => 'Русский язык';
+
+  @override
+  String get englishLanguage => 'Английский язык';
+
+  @override
+  String launchNamed(String name) {
+    return 'Запустить $name';
+  }
+
+  @override
+  String removeNamed(String name) {
+    return 'Убрать $name из библиотеки';
+  }
+
+  @override
+  String addNamed(String name) {
+    return 'Добавить $name';
+  }
+
+  @override
+  String addedNamed(String name) {
+    return '$name добавлено';
+  }
+
+  @override
   String get tagline => 'Единый интерфейс. Связанные устройства.';
 
   @override

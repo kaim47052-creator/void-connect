@@ -10,6 +10,35 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get loading => 'Loading…';
+
+  @override
+  String get russianLanguage => 'Russian language';
+
+  @override
+  String get englishLanguage => 'English language';
+
+  @override
+  String launchNamed(String name) {
+    return 'Launch $name';
+  }
+
+  @override
+  String removeNamed(String name) {
+    return 'Remove $name from library';
+  }
+
+  @override
+  String addNamed(String name) {
+    return 'Add $name';
+  }
+
+  @override
+  String addedNamed(String name) {
+    return '$name added';
+  }
+
+  @override
   String get tagline => 'One interface. Connected devices.';
 
   @override

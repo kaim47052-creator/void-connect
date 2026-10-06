@@ -98,6 +98,48 @@ abstract class AppLocalizations {
     Locale('ru'),
   ];
 
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading…'**
+  String get loading;
+
+  /// No description provided for @russianLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian language'**
+  String get russianLanguage;
+
+  /// No description provided for @englishLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'English language'**
+  String get englishLanguage;
+
+  /// No description provided for @launchNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Launch {name}'**
+  String launchNamed(String name);
+
+  /// No description provided for @removeNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name} from library'**
+  String removeNamed(String name);
+
+  /// No description provided for @addNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {name}'**
+  String addNamed(String name);
+
+  /// No description provided for @addedNamed.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} added'**
+  String addedNamed(String name);
+
   /// No description provided for @tagline.
   ///
   /// In en, this message translates to:

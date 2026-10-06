@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../core/l10n/generated/app_localizations.dart';
+import '../core/motion/void_motion.dart';
+import '../core/motion/system_motion_scope.dart';
 import '../core/settings/data/language_settings_platform.dart';
 import '../core/theme/void_theme.dart';
 import '../features/launcher/data/app_library_platform.dart';
@@ -89,11 +91,20 @@ class _VoidConnectAppState extends State<VoidConnectApp> {
     locale: _locale,
     supportedLocales: AppLocalizations.supportedLocales,
     localizationsDelegates: AppLocalizations.localizationsDelegates,
+    builder: (context, child) => SystemMotionScope(child: child!),
     home: _ready
         ? LauncherPage(
             onLocaleChanged: _changeLanguage,
             appLibraryPlatform: widget.appLibraryPlatform,
           )
-        : const Scaffold(body: Center(child: CircularProgressIndicator())),
+        : Builder(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: LoadingIndicator(
+                  label: AppLocalizations.of(context)!.loading,
+                ),
+              ),
+            ),
+          ),
   );
 }

@@ -22,6 +22,14 @@ using flutter::EncodableList;
 using flutter::EncodableMap;
 using flutter::EncodableValue;
 
+bool ReduceMotionEnabled() {
+  BOOL enabled = TRUE;
+  if (!SystemParametersInfoW(SPI_GETCLIENTAREAANIMATION, 0, &enabled, 0)) {
+    return true;
+  }
+  return enabled == FALSE;
+}
+
 std::string Utf8FromWide(const std::wstring& value) {
   if (value.empty()) return {};
   const int length = WideCharToMultiByte(CP_UTF8, 0, value.data(),
@@ -298,6 +306,18 @@ bool FlutterWindow::OnCreate() {
       flutter_controller_->engine()->messenger(), "void_connect/settings",
       &flutter::StandardMethodCodec::GetInstance());
   settings_channel_->SetMethodCallHandler(HandleSettingsCall);
+  motion_channel_ = std::make_unique<flutter::MethodChannel<EncodableValue>>(
+      flutter_controller_->engine()->messenger(), "void_connect/motion",
+      &flutter::StandardMethodCodec::GetInstance());
+  motion_channel_->SetMethodCallHandler(
+      [](const flutter::MethodCall<EncodableValue>& call,
+         std::unique_ptr<flutter::MethodResult<EncodableValue>> result) {
+        if (call.method_name() == "getReduceMotion") {
+          result->Success(EncodableValue(ReduceMotionEnabled()));
+        } else {
+          result->NotImplemented();
+        }
+      });
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
   flutter_controller_->engine()->SetNextFrameCallback([&]() {
@@ -313,6 +333,9 @@ bool FlutterWindow::OnCreate() {
 }
 
 void FlutterWindow::OnDestroy() {
+  motion_channel_.reset();
+  settings_channel_.reset();
+  app_library_channel_.reset();
   if (flutter_controller_) {
     flutter_controller_ = nullptr;
   }
@@ -324,6 +347,11 @@ LRESULT
 FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
                               WPARAM const wparam,
                               LPARAM const lparam) noexcept {
+  if (message == WM_SETTINGCHANGE && motion_channel_) {
+    motion_channel_->InvokeMethod(
+        "motionChanged",
+        std::make_unique<EncodableValue>(ReduceMotionEnabled()));
+  }
   // Give Flutter, including plugins, an opportunity to handle window messages.
   if (flutter_controller_) {
     std::optional<LRESULT> result =
