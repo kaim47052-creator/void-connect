@@ -13,8 +13,6 @@
 
 #include <shellapi.h>
 #include <shlobj.h>
-#include <shobjidl.h>
-#include <wrl/client.h>
 
 #include "flutter/generated_plugin_registrant.h"
 
@@ -153,20 +151,17 @@ bool WriteSavedApps(const std::set<std::string>& app_ids) {
 }
 
 std::wstring ShortcutName(const std::filesystem::path& path) {
-  Microsoft::WRL::ComPtr<IShellLinkW> shell_link;
-  if (FAILED(CoCreateInstance(CLSID_ShellLink, nullptr, CLSCTX_INPROC_SERVER,
-                              IID_PPV_ARGS(&shell_link)))) {
-    return path.stem().wstring();
-  }
-  Microsoft::WRL::ComPtr<IPersistFile> persist_file;
-  if (FAILED(shell_link.As(&persist_file)) ||
-      FAILED(persist_file->Load(path.c_str(), STGM_READ))) {
-    return path.stem().wstring();
-  }
-  wchar_t description[512] = {};
-  if (SUCCEEDED(shell_link->GetDescription(description, ARRAYSIZE(description))) &&
-      description[0] != L'\0') {
-    return description;
+  // A shortcut description is a tooltip, not the application's name.
+  SHFILEINFOW file_info = {};
+  if (SHGetFileInfoW(path.c_str(), 0, &file_info, sizeof(file_info),
+                     SHGFI_DISPLAYNAME) != 0 &&
+      file_info.szDisplayName[0] != L'\0') {
+    std::wstring name(file_info.szDisplayName);
+    if (name.size() > 4 &&
+        _wcsicmp(name.c_str() + name.size() - 4, L".lnk") == 0) {
+      name.resize(name.size() - 4);
+    }
+    return name;
   }
   return path.stem().wstring();
 }
