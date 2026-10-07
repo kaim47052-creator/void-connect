@@ -66,7 +66,7 @@ flutter run -d windows
 ## Проверки и сборки
 
 ```sh
-dart format --output=none --set-exit-if-changed lib test
+dart format --output=none --set-exit-if-changed lib test integration_test
 flutter analyze
 flutter test
 flutter build windows --release
@@ -74,6 +74,10 @@ flutter build apk --debug
 ```
 
 Windows собирается на Windows с C++ toolchain. APK в CI подписан отладочным ключом и предназначен для проверки. Публикация в магазинах и автоматическое обновление пользователей не настроены.
+
+Нативные проверки выполняются отдельно: `flutter test integration_test/platform_smoke_test.dart -d windows` или `-d <android-device-id>`. Они используют настоящий каталог и хранилище настроек. Для Android используйте отдельное тестовое устройство/профиль: Flutter устанавливает тестовый APK и удаляет пакет после проверки. Сохраните данные существующей установки перед запуском. В Windows создаётся временная запись библиотеки, которая удаляется в `finally`; выбранный язык восстанавливается. Если язык ещё не сохранён, тест проверяет только его чтение и отклонение неверного кода.
+
+Результаты полного прогона: [2026-10-07](docs/testing/full-tests-2026-10-07.md).
 
 ## Структура
 
@@ -94,6 +98,7 @@ lib/
 android/                       # Нативная оболочка Android
 windows/                       # Нативная оболочка Windows
 test/                          # Язык, клавиатура, доступность и адаптивность
+integration_test/              # Настоящие платформенные каналы и запуск UI
 docs/                          # Архитектура, ADR и план
 .github/                       # CI и шаблоны
 ```

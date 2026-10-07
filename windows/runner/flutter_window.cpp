@@ -241,6 +241,10 @@ void HandleAppLibraryCall(
       return;
     }
     const std::string app_id = std::get<std::string>(id_entry->second);
+    if (app_id.find_first_not_of(" \t\r\n") == std::string::npos) {
+      result->Error("invalid_argument", "App identifier is required");
+      return;
+    }
     if (call.method_name() == "launchApp") {
       const auto path = WideFromUtf8(app_id);
       if (_wcsicmp(std::filesystem::path(path).extension().c_str(), L".lnk") !=
