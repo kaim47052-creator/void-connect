@@ -19,7 +19,7 @@
 
 Цель — единый современный интерфейс, синхронизация между устройствами, поддержка множества языков, плавные анимации, модульная архитектура, обновления и расширяемость через плагины.
 
-> **Ранняя стадия разработки.** Это прототип. Доступны предварительные Windows-сборки и отладочный APK Android для тестирования.
+> **Ранняя стадия разработки.** Это прототип. Подготавливаются подписанный Android APK для прямого скачивания и Windows ZIP. Прежние опубликованные preview содержат отладочные APK.
 
 ## Состояние
 
@@ -65,6 +65,8 @@ flutter run -d windows
 
 ## Проверки и сборки
 
+Инструкции [установки](docs/INSTALL.md) и [подготовки выпуска](docs/RELEASING.md), [список изменений](CHANGELOG.md). Android release собирается локально через `scripts/Build-SignedAndroid.ps1`; без параметров подписи release-сборка завершится ошибкой. Debug APK в CI сохраняется для тестов.
+
 ```sh
 dart format --output=none --set-exit-if-changed lib test integration_test
 flutter analyze
@@ -103,12 +105,12 @@ docs/                          # Архитектура, ADR и план
 .github/                       # CI и шаблоны
 ```
 
-Android ID `dev.voidconnect.void_connect` — временный. До публикации его необходимо утвердить вместе с подписанием приложения.
+Android ID для v0.1 сохраняется `dev.voidconnect.void_connect`. Название приложения — Void Connect, Windows EXE — `VoidConnect.exe`. Канал предварительного распространения и подписи зафиксированы в [ADR 0002](docs/adr/0002-preview-distribution.md).
 
 ## Участие и лицензия
 
 Начните с [Issues](https://github.com/kaim47052-creator/void-connect/issues) и [CONTRIBUTING.md](CONTRIBUTING.md). Не публикуйте секреты и личные данные в задачах и логах.
 
-Лицензия пока не выбрана. Публичный доступ сам по себе не предоставляет разрешение на использование и распространение кода. Условия необходимо определить до внешнего распространения.
+Код Void Connect распространяется по [MIT](LICENSE). Уведомления и лицензии сторонних компонентов сохраняются отдельно: [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md).
 
 <sub>Void Connect · Windows + Android · Early development</sub>

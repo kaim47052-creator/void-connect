@@ -32,6 +32,14 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+/android/.kotlin/
+
+# Release signing material never belongs in source control.
+*.p12
+*.pfx
+*.keystore
+*.jks
+*password*.clixml
 
 # Symbolication related
 app.*.symbols

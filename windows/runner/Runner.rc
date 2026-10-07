@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "dev.voidconnect" "\0"
-            VALUE "FileDescription", "void_connect" "\0"
+            VALUE "FileDescription", "Void Connect" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "void_connect" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 dev.voidconnect. All rights reserved." "\0"
-            VALUE "OriginalFilename", "void_connect.exe" "\0"
-            VALUE "ProductName", "void_connect" "\0"
+            VALUE "InternalName", "VoidConnect" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 kaim47052-creator. MIT License." "\0"
+            VALUE "OriginalFilename", "VoidConnect.exe" "\0"
+            VALUE "ProductName", "Void Connect" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
